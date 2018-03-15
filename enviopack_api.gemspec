@@ -1,17 +1,17 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "enviopack/api/version"
+require "enviopack_api/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "enviopack-api"
-  spec.version       = Enviopack::Api::VERSION
+  spec.name          = "enviopack_api"
+  spec.version       = EnviopackApi::VERSION
   spec.authors       = ["V.Bondaruk"]
   spec.email         = ["slaff@pow.la"]
 
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{Ruby on Rails Enviopack API Interface}
+  spec.description   = %q{}
+  spec.homepage      = "https://github.com/bondarolik/enviopack-api.git"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -32,4 +32,5 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.16.a"
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "rest-client"
 end
