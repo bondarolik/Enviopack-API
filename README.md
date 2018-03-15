@@ -1,40 +1,159 @@
 # EnviopackApi
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/enviopack_api`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Instalación
 
-TODO: Delete this and the text above, and describe your gem
-
-## Installation
-
-Add this line to your application's Gemfile:
+Agregá esta linea en tu Ruby (Ruby on Rails) applicación:
 
 ```ruby
 gem 'enviopack_api'
 ```
 
-And then execute:
+Ejecutá bundler:
 
     $ bundle
 
-Or install it yourself as:
+O actualiza (instala) independientemente:
 
     $ gem install enviopack_api
 
-## Usage
+## Uso
 
-TODO: Write usage instructions here
+> Todos los metodos devuelven objetos en OpenStruct. Por lo cual, los response que deberias usar son: result.id (result.code, etc.)
+
+Primero deberias leer documentación oficial y [consideraciones iniciales](https://www.enviopack.com/documentacion/consideraciones-iniciales) de Enviopack. 
+
+### Access & Refresh tokens
+
+En segunda instancia seguí los pasos para obtener los API ID & KEY en tu panel de control en Enviopack y luego el `access_token` o `refresh_token`:
+
+```ruby
+# Obtener access token
+irb:  EnviopackApi::Auth.new(api_key, api_secret).auth
+
+# Actualizar tokens:
+# no olvides a grabarlos en tu base de datos
+irb: refresh = EnviopackApi::Auth.new(api_key, api_secret).refres(refresh_token)
+```
+
+
+Para usar API en general necesitaras pocos metodos y muchos parametros. Los principales y testeados en esta GEMa estan descriptos a continuación.
+
+Una vez obtenido access_token podeis comenzar a trabajar con API. Simplemente crea una conexión con cliente: 
+
+```ruby
+client = EnviopackApi::Client.new(access_token)
+
+# presta atención que va sin trailing slash en adelante
+client.get("pedidos/id")
+```
+
+
+### Metodos principales GET
+
+Para obtener datos de pracitcametne cualquier recurso:
+
+```ruby
+client.get("resource")
+```
+
+Recursos disponibles en el momento de publicación:
+
+    + correos
+    + sucursales
+    + provincias
+    + localidades
+    + tipos-de-paquetes
+    + mis-direcciones
+    + direcciones-de-envio
+
+Mas información sobre cada uno y sus usos encuentra en [Documentación correspondiente](https://www.enviopack.com/documentacion/correos)
+
+Para obtener datos de algún recurso especifico podeis utilizar siguiente metodo:
+
+```ruby
+client.get_resource("resource")
+```
+
+### Validación de Código Postal
+
+Existe un metodo especial para validad `código postal` . El parametro `provincia_id` es un **iso_code** sin prefijo **"AR-"**
+
+```ruby
+# /provincia/ID/validar-codigo-postal
+client.validate_zipcode(province_id, zipcode)
+# => {"valido":true}
+```
+
+Mas info sobre [ISO 3166](https://www.iso.org/obp/ui/#iso:code:3166:AR). Sugerimos tenerlos en agluna tabla de tu base de datos. 
+
+### Cotizar un envío
+
+Basicamente se puede hacer un request por `EnviopackApi::Client.get`, pero también se puede usar este metodo:
+
+```ruby
+# https://www.enviopack.com/documentacion/cotiza-un-envio
+quote = client.get_quote(params)
+```
+
+Existen parametros obligatorios y opcionales. Ten cuidado con esto.
+
+### Crear un POST 
+
+```ruby
+client.post("resource")
+```
+
+Atención con lo que mandas. Originalmente, los dos **POST** que vas hacer son a "pedidos" y "envios". Pero, también podeis mandar "place_order" o "shipping". No hay problema en esto.
+
+```ruby
+      case resource
+      when "pedidos", "place_order", "new_order" then url = "/pedidos"
+      when "envios", "shipping" then url = "/envios"
+      else url = "/#{resource}"
+      end
+```
+
+
+### Impresión de etiquetas de envío
+
+> Aún no testeado en GEMa en producción. En localhost anda bien, pero sin confirmación todavía.
+
+
+```ruby
+# imprimir etiqueta particular
+client.print_single(id, "pdf")
+
+# imprimir varias etiquetas
+client.print_batch(ids)
+```
+
+En BATCH se imprime únicamente PDF. Tienes que pasar el Array de IDS. Por ejemplo:
+
+```ruby
+ids = [1,2,3,4]
+```
+
+La GEMa lo convierte en formato que corresponde. Como resultado vas a recibir un PDF por el medio de siguiente función ruby:
+
+```ruby
+send_data(response, :filename => "etiquetas_-_#{timenow}.pdf", :disposition => "attachment", :type => "application/pdf")
+```
+
+De la misma manera podes crear un request GET y procesar por separado la etiqueta. 
+
+
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+No esta hecho **SPLIT DE PAGO** y **NOTIFICACIONES**. No se sabe cuando y si se va a realizarse en esta GEMa.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/enviopack_api. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Sea bienvenido de forkear, modificar y hacer sugerencias. Postea bugs y requests en ISSUES explicando lo que te paso paso a paso para comprender mejor. 
 
 ## License
+
+GEMa hecha en laboratorios de desarrollo [POW](http://pow.la/)
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
 
