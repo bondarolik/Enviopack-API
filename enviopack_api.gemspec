@@ -6,7 +6,7 @@ require "enviopack_api/version"
 Gem::Specification.new do |spec|
   spec.name          = "enviopack_api"
   spec.version       = EnviopackApi::VERSION
-  spec.authors       = ["V.Bondaruk"]
+  spec.authors       = ["V.Bondaruk | POW.la"]
   spec.email         = ["slaff@pow.la"]
 
   spec.summary       = %q{Ruby on Rails Enviopack API Interface}
