@@ -5,7 +5,8 @@
 Agregá esta linea en tu Ruby (Ruby on Rails) applicación:
 
 ```ruby
-gem 'enviopack_api'
+# para la última versión
+gem 'enviopack_api', :git => "git@github.com:bondarolik/enviopack-api.git"
 ```
 
 Ejecutá bundler:
