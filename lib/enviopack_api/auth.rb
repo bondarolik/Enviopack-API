@@ -1,8 +1,8 @@
 module EnviopackApi
   class Auth
     def initialize(api_key = nil, api_secret = nil)
-      @api_key = access_token || ENV["ENVIPACK_API_KEY"]
-      @api_secret = access_token || ENV["ENVIPACK_API_SECRET"]
+      @api_key = api_key || ENV["ENVIPACK_API_KEY"]
+      @api_secret = api_secret || ENV["ENVIPACK_API_SECRET"]
       @base_uri = "https://api.enviopack.com"
     end
 

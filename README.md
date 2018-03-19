@@ -29,11 +29,11 @@ En segunda instancia seguí los pasos para obtener los API ID & KEY en tu panel 
 
 ```ruby
 # Obtener access token
-irb:  EnviopackApi::Auth.new(api_key, api_secret).auth
+irb: auth = EnviopackApi::Auth.new(api_key, api_secret).auth
 
 # Actualizar tokens:
 # no olvides a grabarlos en tu base de datos
-irb: refresh = EnviopackApi::Auth.new(api_key, api_secret).refres(refresh_token)
+irb: refresh = EnviopackApi::Auth.new(api_key, api_secret).refresh(refresh_token)
 ```
 
 
@@ -42,7 +42,7 @@ Para usar API en general necesitaras pocos metodos y muchos parametros. Los prin
 Una vez obtenido access_token podeis comenzar a trabajar con API. Simplemente crea una conexión con cliente: 
 
 ```ruby
-client = EnviopackApi::Client.new(access_token)
+client = EnviopackApi::Client.new(auth.token)
 
 # presta atención que va sin trailing slash en adelante
 client.get("pedidos/id")
