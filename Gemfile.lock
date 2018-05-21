@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    enviopack_api (0.1.1)
+    enviopack_api (0.1.2)
       json
       rest-client
 

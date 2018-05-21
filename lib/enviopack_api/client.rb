@@ -109,6 +109,16 @@ module EnviopackApi
       post_request(url, params)
     end
 
+    # DELETE resource
+    # https://www.enviopack.com/documentacion/
+    # req: params
+    # Client.delete(params)
+    def delete(params)
+      url = "/pedidos/descartar-envios"
+
+      delete_request(url, params)
+    end
+
     # Print shipping ticket
     # ID = ticket ID
     # Output: PDF or JPG
@@ -164,5 +174,17 @@ module EnviopackApi
         return JSON.parse(e.response, object_class: OpenStruct)
       end
     end # post_request
+
+    # DELETE
+    def delete_request(url, params)
+      begin
+        resource_url = "#{@base_uri}#{url}?access_token=#{@access_token}"
+        response = RestClient.delete resource_url, params.to_json, {content_type: :json, accept: :json}
+        result = JSON.parse(response, object_class: OpenStruct)
+        return result
+      rescue => e
+        return JSON.parse(e.response, object_class: OpenStruct)
+      end
+    end # delete_request
   end # module EnviopackApi::Client
 end
