@@ -111,12 +111,13 @@ module EnviopackApi
 
     # DELETE resource
     # https://www.enviopack.com/documentacion/
-    # req: params
+    # req: params (comma separated list of IDs)
     # Client.delete(params)
     def delete(params)
       url = "/pedidos/descartar-envios"
+      to_query = "ids=#{params}"
 
-      delete_request(url, params)
+      delete_request(url, to_query)
     end
 
     # Print shipping ticket
@@ -178,8 +179,9 @@ module EnviopackApi
     # DELETE
     def delete_request(url, params)
       begin
-        resource_url = "#{@base_uri}#{url}?access_token=#{@access_token}"
-        response = RestClient.delete resource_url, params.to_json, {content_type: :json, accept: :json}
+        resource_url = "#{@base_uri}#{url}?access_token=#{@access_token}&#{params}"
+        response = RestClient.delete resource_url, {content_type: :json, accept: :json}
+
         result = JSON.parse(response, object_class: OpenStruct)
         return result
       rescue => e

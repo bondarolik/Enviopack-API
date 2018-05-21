@@ -21,7 +21,7 @@ O actualiza (instala) independientemente:
 
 > Todos los metodos devuelven objetos en OpenStruct. Por lo cual, los response que deberias usar son: result.id (result.code, etc.)
 
-Primero deberias leer documentación oficial y [consideraciones iniciales](https://www.enviopack.com/documentacion/consideraciones-iniciales) de Enviopack. 
+Primero deberias leer documentación oficial y [consideraciones iniciales](https://www.enviopack.com/documentacion/consideraciones-iniciales) de Enviopack.
 
 ### Access & Refresh tokens
 
@@ -39,7 +39,7 @@ irb: refresh = EnviopackApi::Auth.new(api_key, api_secret).refresh(refresh_token
 
 Para usar API en general necesitaras pocos metodos y muchos parametros. Los principales y testeados en esta GEMa estan descriptos a continuación.
 
-Una vez obtenido access_token podeis comenzar a trabajar con API. Simplemente crea una conexión con cliente: 
+Una vez obtenido access_token podeis comenzar a trabajar con API. Simplemente crea una conexión con cliente:
 
 ```ruby
 client = EnviopackApi::Client.new(auth.token)
@@ -85,7 +85,7 @@ client.validate_zipcode(province_id, zipcode)
 # => {"valido":true}
 ```
 
-Mas info sobre [ISO 3166](https://www.iso.org/obp/ui/#iso:code:3166:AR). Sugerimos tenerlos en agluna tabla de tu base de datos. 
+Mas info sobre [ISO 3166](https://www.iso.org/obp/ui/#iso:code:3166:AR). Sugerimos tenerlos en agluna tabla de tu base de datos.
 
 ### Cotizar un envío
 
@@ -98,7 +98,7 @@ quote = client.get_quote(params)
 
 Existen parametros obligatorios y opcionales. Ten cuidado con esto.
 
-### Crear un POST 
+### Crear un POST
 
 ```ruby
 client.post("resource")
@@ -113,6 +113,28 @@ Atención con lo que mandas. Originalmente, los dos **POST** que vas hacer son a
       else url = "/#{resource}"
       end
 ```
+
+### Eliminar un (o varios) envios
+
+El envio debe estar en borrador y **no estar procesado**
+
+```ruby
+# comma separated list
+# ids = array_of_ids.join(",")
+# => 1,2,3....xxx
+client.delete(ids)
+```
+
+Atención con lo que mandas. Originalmente, los dos **POST** que vas hacer son a "pedidos" y "envios". Pero, también podeis mandar "place_order" o "shipping". No hay problema en esto.
+
+```ruby
+      case resource
+      when "pedidos", "place_order", "new_order" then url = "/pedidos"
+      when "envios", "shipping" then url = "/envios"
+      else url = "/#{resource}"
+      end
+```
+
 
 
 ### Impresión de etiquetas de envío
@@ -140,7 +162,7 @@ La GEMa lo convierte en formato que corresponde. Como resultado vas a recibir un
 send_data(response, :filename => "etiquetas_-_#{timenow}.pdf", :disposition => "attachment", :type => "application/pdf")
 ```
 
-De la misma manera podes crear un request GET y procesar por separado la etiqueta. 
+De la misma manera podes crear un request GET y procesar por separado la etiqueta.
 
 
 
@@ -150,7 +172,7 @@ No esta hecho **SPLIT DE PAGO** y **NOTIFICACIONES**. No se sabe cuando y si se 
 
 ## Contributing
 
-Sea bienvenido de forkear, modificar y hacer sugerencias. Postea bugs y requests en ISSUES explicando lo que te paso paso a paso para comprender mejor. 
+Sea bienvenido de forkear, modificar y hacer sugerencias. Postea bugs y requests en ISSUES explicando lo que te paso paso a paso para comprender mejor.
 
 ## License
 
