@@ -182,8 +182,8 @@ module EnviopackApi
         resource_url = "#{@base_uri}#{url}?access_token=#{@access_token}&#{params}"
         response = RestClient.delete resource_url, {content_type: :json, accept: :json}
 
-        result = JSON.parse(response, object_class: OpenStruct)
-        return result
+        #result = JSON.parse(response, object_class: OpenStruct)
+        return response
       rescue => e
         return JSON.parse(e.response, object_class: OpenStruct)
       end
